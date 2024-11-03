@@ -9,6 +9,6 @@ namespace DatingApp.Core.Contracts.Services
 {
     public interface IUserService
     {
-        List<AppUser> GetAllUsers();
+        List<AppUser> GetAllUsers(string? name = null);
     }
 }

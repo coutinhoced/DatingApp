@@ -19,13 +19,13 @@ namespace DatingApp.Infrastructure.Services
             userRepository = repo;
         }
 
-        public List<AppUser> GetAllUsers()
+        public List<AppUser> GetAllUsers(string? name = null)
         {
             List<AppUser> appUsers = new List<AppUser>();
 
             try
             {
-                using (DataSet ds = userRepository.GetAllUsers())
+                using (DataSet ds = userRepository.GetAllUsers(name))
                 {
                     if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                     {

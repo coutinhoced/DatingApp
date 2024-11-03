@@ -1,4 +1,5 @@
-﻿using DatingApp.Application.Features.User.Queries;
+﻿using API.Filters;
+using DatingApp.Application.Features.User.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,6 +7,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [ServiceFilter(typeof(SanitizeParametersFilter))]
     public class UserController : ControllerBase
     {
         private IMediator mediator;
@@ -16,7 +18,7 @@ namespace API.Controllers
 
 
         [HttpPost("GetUsers")]
-        public async Task<IActionResult> GetUsers([FromBody] GetUsersQuery usersQuery)
+        public async Task<IActionResult> GetUsers([FromBody] GetUsersQuery? usersQuery)
         {            
             var response = await mediator.Send(usersQuery);
 

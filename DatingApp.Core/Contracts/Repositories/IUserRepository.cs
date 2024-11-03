@@ -9,6 +9,6 @@ namespace DatingApp.Core.Contracts.Repositories
 {
     public interface IUserRepository
     {
-        DataSet GetAllUsers();
+        DataSet GetAllUsers(string? name =null);
     }
 }

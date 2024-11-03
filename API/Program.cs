@@ -1,4 +1,5 @@
 using API;
+using API.Filters;
 using DatingApp.Domain.Common.Options;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -17,10 +17,13 @@ namespace DatingApp.Persistence.Repository
             this.sqlHelper = sqlHelper;
         }
 
-        public DataSet GetAllUsers()
+        public DataSet GetAllUsers(string? name = null)
         {
             DataSet ds;
-            ds = sqlHelper.GetDataSet("sp_GetAllUsers", CommandType.StoredProcedure, null);
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            parameters.Add("@Name", name);
+
+            ds = sqlHelper.GetDataSet("sp_GetAllUsers", CommandType.StoredProcedure, parameters);
             return ds;
            
         }

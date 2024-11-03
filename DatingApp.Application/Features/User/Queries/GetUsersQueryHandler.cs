@@ -20,7 +20,7 @@ namespace DatingApp.Application.Features.User.Queries
 
         public Task<List<AppUser>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
         {
-            var allUsers = userService.GetAllUsers();   
+            var allUsers = userService.GetAllUsers(request.name);   
             return Task.FromResult(allUsers);
         }
     }
