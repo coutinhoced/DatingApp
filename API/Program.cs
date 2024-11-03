@@ -13,6 +13,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<DBOptions>(builder.Configuration.GetSection("ConnectionStrings"));
 builder.ConfigureDatingServices();
+builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -25,7 +26,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
 app.MapControllers();
 

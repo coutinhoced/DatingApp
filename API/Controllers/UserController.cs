@@ -19,7 +19,9 @@ namespace API.Controllers
 
         [HttpPost("GetUsers")]
         public async Task<IActionResult> GetUsers([FromBody] GetUsersQuery? usersQuery)
-        {            
+        {    
+            if(usersQuery == null)
+                usersQuery = new GetUsersQuery();
             var response = await mediator.Send(usersQuery);
 
             if (response == null) return NotFound();

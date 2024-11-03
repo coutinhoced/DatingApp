@@ -17,10 +17,10 @@ namespace API.Filters
 
             foreach (var parameter in actionDescriptorparameters)
             {
-                var par = parameter.ParameterType.FullName;
-                Type type = Type.GetType(parameter.ParameterType.AssemblyQualifiedName);
+                //var par = parameter.ParameterType.FullName;
+                //Type type = Type.GetType(parameter.ParameterType.AssemblyQualifiedName);
 
-                keyValuePairs.Add(par, null);
+                //keyValuePairs.Add(par, null);
             }
 
             foreach (var parameter in parameters)
