@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DatingApp.Domain.Entities;
+using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -10,5 +12,8 @@ namespace DatingApp.Core.Contracts.Repositories
     public interface IUserRepository
     {
         DataSet GetAllUsers(string? name =null);
+        DataTable RegisterUser(AppUser user);
+
+        DataTable GetLoginUser(string username);
     }
 }

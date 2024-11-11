@@ -17,5 +17,9 @@ namespace DatingApp.Core.Contracts.Common
 
         DataSet GetDataSet<T>(string sql, CommandType cmdtype, Dictionary<string, T?>? sqlparams = null);
 
+        DataTable GetDataByDataReader<T>(string sql, CommandType cmdtype, Dictionary<string, T> parameters);
+        SqlDataReader GetSequentialDataByDataReader<T>(SqlConnection con, string sql, CommandType cmdtype, Dictionary<string, T> parameters);
+
+
     }
 }

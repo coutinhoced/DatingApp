@@ -1,5 +1,7 @@
 ﻿using DatingApp.Core.Contracts.Common;
 using DatingApp.Core.Contracts.Repositories;
+using DatingApp.Domain.Entities;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -26,6 +28,31 @@ namespace DatingApp.Persistence.Repository
             ds = sqlHelper.GetDataSet("sp_GetAllUsers", CommandType.StoredProcedure, parameters);
             return ds;
            
+        }
+
+        public DataTable RegisterUser(AppUser user)
+        {
+            DataTable dt;
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("@UserName", user.UserName);
+            parameters.Add("@PasswordHash", user.PasswordHash);
+            parameters.Add("@PasswordSalt", user.PasswordSalt);
+
+            dt = sqlHelper.GetDataByDataReader("sp_RegisterUser", CommandType.StoredProcedure, parameters);
+            return dt;
+
+        }
+
+
+        public DataTable GetLoginUser(string username)
+        {
+            DataTable dt;
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("@Username", username);          
+
+            dt = sqlHelper.GetDataByDataReader("sp_GetLoginUser", CommandType.StoredProcedure, parameters);
+            return dt;
+
         }
     }
 }

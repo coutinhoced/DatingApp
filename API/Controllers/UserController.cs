@@ -5,10 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+
     [ServiceFilter(typeof(SanitizeParametersFilter))]
-    public class UserController : ControllerBase
+    public class UserController : BaseApiController
     {
         private IMediator mediator;
         public UserController(IMediator mediator)

@@ -55,11 +55,89 @@ namespace DatingApp.Persistence.Common
                     }
                     var dtStart = DateTime.Now;
                     con.Open();
-                    da.Fill(ds);                  
+                    da.Fill(ds);
                 }
             }
 
             return ds;
         }
+
+        public DataTable GetDataByDataReader<T>(string sql, CommandType cmdtype, Dictionary<string, T> sqlparams)
+        {
+            using (SqlConnection con = CreateConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.Connection = con;
+                    cmd.CommandTimeout = CommandTimeOut;
+                    cmd.CommandType = cmdtype;
+                    if (sqlparams != null)
+                    {
+                        foreach (var key in sqlparams.Keys)
+                        {
+                            if (sqlparams[key] == null)
+                                cmd.Parameters.Add(new SqlParameter(key, DBNull.Value));
+                            else
+                                cmd.Parameters.Add(new SqlParameter(key, sqlparams[key]));
+                        }
+                    }
+                  
+                    con.Open();
+                    SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                    DataTable table = new DataTable();
+                    int fieldCount = dr.FieldCount;
+                    for (int i = 0; i < fieldCount; i++)
+                    {
+                        table.Columns.Add(dr.GetName(i), dr.GetFieldType(i));
+                    }
+
+                    while (dr.Read())
+                    {
+                        DataRow row = table.NewRow();
+                        for (int i = 0; i < fieldCount; i++)
+                        {                           
+                            row[i]= dr.GetValue(i);                                                                        
+                        }
+                        table.Rows.Add(row);
+                    }
+                    return table;
+                }
+            }
+        }
+
+
+        public SqlDataReader GetSequentialDataByDataReader<T>(SqlConnection con, string sql, CommandType cmdtype, Dictionary<string, T> sqlparams)
+        {
+            using (SqlCommand cmd = new SqlCommand())
+            {
+                cmd.CommandText = sql;
+                cmd.Connection = con;
+                cmd.CommandTimeout = CommandTimeOut;
+                cmd.CommandType = cmdtype;
+                if (sqlparams != null)
+                {
+                    foreach (var key in sqlparams.Keys)
+                    {
+                        if (sqlparams[key] == null)
+                            cmd.Parameters.Add(new SqlParameter(key, DBNull.Value));
+                        else
+                            cmd.Parameters.Add(new SqlParameter(key, sqlparams[key]));
+                    }
+                }
+
+                var dtStart = DateTime.Now;
+
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.SequentialAccess);
+
+                return dr;
+            }
+        }
+
     }
 }
