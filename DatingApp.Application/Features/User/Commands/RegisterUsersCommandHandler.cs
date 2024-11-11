@@ -1,4 +1,5 @@
 ﻿using DatingApp.Core.Contracts.Services;
+using DatingApp.Domain.Dto;
 using DatingApp.Domain.Entities;
 using MediatR;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DatingApp.Application.Features.User.Commands
 {
-    public class RegisterUsersCommandHandler : IRequestHandler<RegisterUsersCommand, AppUser>
+    public class RegisterUsersCommandHandler : IRequestHandler<RegisterUsersCommand, UserDto>
     {
         private IUserService userService;
 
@@ -18,7 +19,7 @@ namespace DatingApp.Application.Features.User.Commands
             this.userService = userService;
         }
 
-        public Task<AppUser> Handle(RegisterUsersCommand request, CancellationToken cancellationToken)
+        public Task<UserDto> Handle(RegisterUsersCommand request, CancellationToken cancellationToken)
         {
             var user = this.userService.RegisterUser(request.username.ToLower(), request.password);
             return Task.FromResult(user);

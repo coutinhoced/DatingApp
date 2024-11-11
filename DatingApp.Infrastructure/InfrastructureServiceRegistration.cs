@@ -14,6 +14,7 @@ namespace DatingApp.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserService, UserService>();
             return services;
         }

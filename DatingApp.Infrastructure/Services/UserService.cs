@@ -1,5 +1,6 @@
 ﻿using DatingApp.Core.Contracts.Repositories;
 using DatingApp.Core.Contracts.Services;
+using DatingApp.Domain.Dto;
 using DatingApp.Domain.Entities;
 using Microsoft.Data.SqlClient;
 using System;
@@ -17,10 +18,12 @@ namespace DatingApp.Infrastructure.Services
     public class UserService : IUserService
     {
         private IUserRepository userRepository;
+        private ITokenService tokenService;
 
-        public UserService(IUserRepository repo)
+        public UserService(IUserRepository repo, ITokenService tokenService)
         {
-            userRepository = repo;
+            this.userRepository = repo;
+            this.tokenService = tokenService;
         }
 
         public List<AppUser> GetAllUsers(string? name = null)
@@ -47,9 +50,10 @@ namespace DatingApp.Infrastructure.Services
             return appUsers;
         }
 
-        public AppUser RegisterUser(string username, string password)
+        public UserDto RegisterUser(string username, string password)
         {
             AppUser appUser = new AppUser();
+            UserDto userDto = new UserDto();
             try
             {
                 using var hmac = new HMACSHA512();
@@ -68,21 +72,23 @@ namespace DatingApp.Infrastructure.Services
                 };
 
                 DataTable registeredUserTable = userRepository.RegisterUser(user);
-                appUser = MapSingleRowModel<AppUser>(registeredUserTable, appUser);
-                
+
+                userDto.Username = username;
+                userDto.Token = tokenService.CreateToken(user);                                             
             }
             catch (Exception ex)
             {
-                appUser.Exception = ex;
-                appUser.ValidationError = ex.Message;
+                userDto.Exception = ex;
+                userDto.ValidationError = ex.Message;
             }
-            return appUser;
+            return userDto;
         }
 
 
-        public AppUser GetLoginUser(string username, string password)
+        public UserDto GetLoginUser(string username, string password)
         {
             AppUser appUser = new AppUser();
+            UserDto userDto = new UserDto();
             try
             {
                 DataTable loginUser = userRepository.GetLoginUser(username);
@@ -90,7 +96,7 @@ namespace DatingApp.Infrastructure.Services
                 if (loginUser.Rows.Count == 0)
                 {
                     appUser.ValidationError = "Invalid username";
-                    return appUser;
+                    return userDto;
                 }
 
                 appUser = MapSingleRowModel<AppUser>(loginUser, appUser);
@@ -103,18 +109,21 @@ namespace DatingApp.Infrastructure.Services
                 {
                     if (computedHash[i] != appUser.PasswordHash[i])
                     {
-                        appUser.ValidationError = "Invalid password";
-                        return appUser;
+                        userDto.ValidationError = "Invalid password";
+                        return userDto;
                     }
-                }         
+                }
+
+                userDto.Username = username;
+                userDto.Token = tokenService.CreateToken(appUser);
 
             }
             catch (Exception ex)
             {
-                appUser.Exception = ex;
-                appUser.ValidationError = ex.Message;
+                userDto.Exception = ex;
+                userDto.ValidationError = ex.Message;
             }
-            return appUser;
+            return userDto;
         }
 
         private AppUser MapToUser(DataRow dataRow)

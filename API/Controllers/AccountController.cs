@@ -1,5 +1,6 @@
 ﻿using DatingApp.Application.Features.User.Commands;
 using DatingApp.Application.Features.User.Queries;
+using DatingApp.Domain.Dto;
 using DatingApp.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -15,14 +16,14 @@ namespace API.Controllers
         }
 
         [HttpPost("register")] //api/account/register
-        public async Task<ActionResult<AppUser>> Register([FromBody] RegisterUsersCommand command)
+        public async Task<ActionResult<UserDto>> Register([FromBody] RegisterUsersCommand command)
         {
             if (string.IsNullOrEmpty(command.username) || string.IsNullOrEmpty(command.password))
             {
                 return BadRequest("Username and Password is mandatory");
             }
 
-            AppUser response = await mediator.Send(command);
+            UserDto response = await mediator.Send(command);
 
             if (response.Exception != null)
             {
@@ -32,9 +33,9 @@ namespace API.Controllers
         }
 
         [HttpPost("login")] //api/account/login
-        public async Task<ActionResult<AppUser>> Login([FromBody] LoginUserQuery loginUserQuery)
+        public async Task<ActionResult<UserDto>> Login([FromBody] LoginUserQuery loginUserQuery)
         {
-            AppUser response = await mediator.Send(loginUserQuery);
+            UserDto response = await mediator.Send(loginUserQuery);
             if (!string.IsNullOrEmpty(response.ValidationError))
             {
                 return Unauthorized(response.ValidationError);

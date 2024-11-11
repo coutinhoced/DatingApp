@@ -1,4 +1,5 @@
-﻿using DatingApp.Domain.Entities;
+﻿using DatingApp.Domain.Dto;
+using DatingApp.Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DatingApp.Application.Features.User.Commands
 {
-    public class RegisterUsersCommand : IRequest<AppUser>
+    public class RegisterUsersCommand : IRequest<UserDto>
     {
         public string username { get; set; }
         public string password { get; set; }
