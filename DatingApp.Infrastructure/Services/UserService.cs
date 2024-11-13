@@ -74,7 +74,7 @@ namespace DatingApp.Infrastructure.Services
                 DataTable registeredUserTable = userRepository.RegisterUser(user);
 
                 userDto.Username = username;
-                userDto.Token = tokenService.CreateToken(user);                                             
+                userDto.Token = tokenService.CreateToken(user);
             }
             catch (Exception ex)
             {
@@ -92,7 +92,7 @@ namespace DatingApp.Infrastructure.Services
             try
             {
                 DataTable loginUser = userRepository.GetLoginUser(username);
-                
+
                 if (loginUser.Rows.Count == 0)
                 {
                     appUser.ValidationError = "Invalid username";
@@ -144,5 +144,6 @@ namespace DatingApp.Infrastructure.Services
             }
             return model;
         }
+       
     }
 }

@@ -1,6 +1,7 @@
 ﻿using API.Filters;
 using DatingApp.Application.Features.User.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -15,7 +16,7 @@ namespace API.Controllers
             this.mediator = mediator;
         }
 
-
+        [Authorize]
         [HttpPost("GetUsers")]
         public async Task<IActionResult> GetUsers([FromBody] GetUsersQuery? usersQuery)
         {    

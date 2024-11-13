@@ -1,4 +1,4 @@
-using API;
+using API.Extensions;
 using API.Filters;
 using DatingApp.Domain.Common.Options;
 
@@ -29,6 +29,9 @@ app.UseHttpsRedirection();
 
 
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
+app.UseAuthentication();
+app.UseAuthorization(); 
 
 app.MapControllers();
 
