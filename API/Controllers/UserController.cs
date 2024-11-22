@@ -16,7 +16,7 @@ namespace API.Controllers
             this.mediator = mediator;
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpPost("GetUsers")]
         public async Task<IActionResult> GetUsers([FromBody] GetUsersQuery? usersQuery)
         {    
