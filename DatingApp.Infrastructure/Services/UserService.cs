@@ -95,7 +95,7 @@ namespace DatingApp.Infrastructure.Services
 
                 if (loginUser.Rows.Count == 0)
                 {
-                    appUser.ValidationError = "Invalid username";
+                    userDto.ValidationError = "Invalid username";
                     return userDto;
                 }
 
