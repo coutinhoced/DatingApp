@@ -1,0 +1,20 @@
+<h4>Internal Server Error</h4>
+@if (error) {
+  <h5 class="text-danger">Error:  {{error.message}}</h5>
+  <p class="font-weight-bold">Note: If you are seeing this error, please contact the administrator!</p>
+  <p>You may also do the following</p>
+  <ol>
+    <li>
+        Open chrome dev tools and check the failing network request
+    </li>
+    <li>
+        Examine the Url of the failing request
+    </li>
+  </ol>
+  <p class="font-weight-bold">
+   Following is the stack trace:
+  </p>
+  <code class="mt-5" style="background-color: black; color: whitesmoke;">
+       {{error.details}}
+  </code>
+}

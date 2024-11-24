@@ -19,6 +19,7 @@ builder.Services.AddCors();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.ConfigureDatingMiddlewarePipeLine();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

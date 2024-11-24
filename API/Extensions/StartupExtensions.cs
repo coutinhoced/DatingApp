@@ -1,4 +1,5 @@
 ﻿using API.Filters;
+using API.Middleware;
 using DatingApp.Application;
 using DatingApp.Infrastructure;
 using DatingApp.Persistence;
@@ -17,8 +18,14 @@ namespace API.Extensions
             builder.Services.AddIdentityServices(builder.Configuration);
             builder.Services.AddInfrastructureServices();
             builder.Services.AddPersistenceServices(builder.Configuration);
-            builder.Services.AddApplicationServices();
+            builder.Services.AddApplicationServices();            
             return builder;
+        }     
+
+        public static IApplicationBuilder ConfigureDatingMiddlewarePipeLine(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<ExceptionMiddleware>();
+            return app;
         }
     }
 }

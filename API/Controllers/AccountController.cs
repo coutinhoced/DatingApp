@@ -17,12 +17,7 @@ namespace API.Controllers
 
         [HttpPost("register")] //api/account/register
         public async Task<ActionResult<UserDto>> Register([FromBody] RegisterUsersCommand command)
-        {
-            if (string.IsNullOrEmpty(command.username) || string.IsNullOrEmpty(command.password))
-            {
-                return BadRequest("Username and Password is mandatory");
-            }
-
+        {           
             UserDto response = await mediator.Send(command);
 
             if (response.Exception != null)
@@ -34,7 +29,7 @@ namespace API.Controllers
 
         [HttpPost("login")] //api/account/login
         public async Task<ActionResult<UserDto>> Login([FromBody] LoginUserQuery loginUserQuery)
-        {
+        {            
             UserDto response = await mediator.Send(loginUserQuery);
             if (!string.IsNullOrEmpty(response.ValidationError))
             {

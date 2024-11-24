@@ -26,7 +26,11 @@ export class NavComponent {
       next: _ =>{
         this.router.navigateByUrl('/members');
       },
-      error: error => this.toaster.error(error.error)
+      error: error => {
+        error.forEach((e : string) => {
+          this.toaster.error(e);
+         });        
+      }
      })
    }
 

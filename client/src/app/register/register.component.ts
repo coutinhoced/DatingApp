@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 export class RegisterComponent {
   private accountService = inject(AccountService);
   private toaster = inject(ToastrService);
+  validationErrors : string[] = [];
   model:any ={}
   cancelRegister = output<boolean>();
   register(){
@@ -21,8 +22,9 @@ export class RegisterComponent {
         console.log(response);
         this.cancel();
       },
-      error: error =>{
-        this.toaster.error(error.error);
+      error: error =>{        
+        //this.toaster.error(error);
+        this.validationErrors = error;
       }      
     })
     console.log(this.model);
