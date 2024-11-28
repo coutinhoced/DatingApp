@@ -10,7 +10,7 @@ namespace DatingApp.Core.Contracts.Services
 {
     public interface IUserService
     {
-        List<AppUser> GetAllUsers(string? name = null);
+        List<MemberDto> GetAllUsers(string? name = null);
         UserDto RegisterUser(string username, string password);
 
         UserDto GetLoginUser(string username, string password);

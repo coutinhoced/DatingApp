@@ -3,6 +3,7 @@ using DatingApp.Core.Contracts.Services;
 using DatingApp.Domain.Dto;
 using DatingApp.Domain.Entities;
 using Microsoft.Data.SqlClient;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,6 +13,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using DatingApp.Infrastructure.Extensions;
 
 namespace DatingApp.Infrastructure.Services
 {
@@ -26,19 +28,31 @@ namespace DatingApp.Infrastructure.Services
             this.tokenService = tokenService;
         }
 
-        public List<AppUser> GetAllUsers(string? name = null)
-        {
-            List<AppUser> appUsers = new List<AppUser>();
-
+        public List<MemberDto> GetAllUsers(string? name = null)
+        {           
+            List<PhotoDto> photos = new List<PhotoDto>();
+            List<MemberDto> memberDtos = new List<MemberDto>();
             try
             {
                 using (DataSet ds = userRepository.GetAllUsers(name))
-                {
+                {                   
+                    if (ds.Tables.Count > 0 && ds.Tables[1].Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in ds.Tables[1].Rows)
+                        {
+                            PhotoDto photo = new PhotoDto();
+                            photos.Add(MapSingleRowModel<PhotoDto>(dr, photo));
+                        }
+                    }
+
                     if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                     {
                         foreach (DataRow dr in ds.Tables[0].Rows)
-                        {
-                            appUsers.Add(MapToUser(dr));
+                        {                                               
+                            MemberDto memberDto = new MemberDto();                            
+                            int userId = Convert.ToInt32(dr["Id"]);
+                            List<PhotoDto> photosToMap = photos.Where(x => x.UserId == userId).ToList();
+                            memberDtos.Add(MapToUserDto(dr, photosToMap));
                         }
                     }
                 }
@@ -47,7 +61,7 @@ namespace DatingApp.Infrastructure.Services
             {
                 throw;
             }
-            return appUsers;
+            return memberDtos;
         }
 
         public UserDto RegisterUser(string username, string password)
@@ -56,14 +70,13 @@ namespace DatingApp.Infrastructure.Services
             UserDto userDto = new UserDto();
             try
             {
-                using var hmac = new HMACSHA512();
                 var userExists = GetAllUsers(username);
-
                 if (userExists.Count > 0)
                 {
                     throw new DuplicateNameException("username already exists");
                 }
 
+                using var hmac = new HMACSHA512();
                 var user = new AppUser
                 {
                     UserName = username,
@@ -126,13 +139,43 @@ namespace DatingApp.Infrastructure.Services
             return userDto;
         }
 
-        private AppUser MapToUser(DataRow dataRow)
+        private MemberDto MapToUserDto(DataRow dataRow, List<PhotoDto> photos)
         {
-            AppUser appUser = new AppUser();
-            appUser.Id = Convert.ToInt32(dataRow["Id"]);
-            appUser.UserName = Convert.ToString(dataRow["UserName"]);
+            var photoUrl = photos.Where(p => p.IsMain == true).Select(x => x.Url).FirstOrDefault();
 
-            return appUser;
+            MemberDto memberDto = new MemberDto();
+            memberDto.Id = Convert.ToInt32(dataRow["Id"]);
+            memberDto.UserName = Convert.ToString(dataRow["UserName"]);
+            memberDto.Age = Convert.ToDateTime(dataRow["DateOfBirth"]).Calculate();
+            memberDto.KnownAs = Convert.ToString(dataRow["KnownAs"]);
+            memberDto.Created = Convert.ToDateTime(dataRow["Created"]);
+            memberDto.LastActive = Convert.ToDateTime(dataRow["LastActive"]);
+            memberDto.Gender = Convert.ToString(dataRow["Gender"]);
+            memberDto.Introduction = Convert.ToString(dataRow["Introduction"]);
+            memberDto.Interests = Convert.ToString(dataRow["Interests"]);
+            memberDto.LookingFor = Convert.ToString(dataRow["LookingFor"]);
+            memberDto.City = Convert.ToString(dataRow["City"]);
+            memberDto.Country = Convert.ToString(dataRow["Country"]);
+            memberDto.PhotoUrl = photoUrl;
+            memberDto.Photos = photos;
+            return memberDto;
+        }
+
+        private T MapSingleRowModel<T>(DataRow dataRow, T model)
+        {
+            foreach (var prop in model.GetType().GetProperties(BindingFlags.DeclaredOnly |
+                                                              BindingFlags.Public | BindingFlags.Instance))
+            {
+                object currentRowValue = dataRow[prop.Name];
+                if (prop.PropertyType.Name != dataRow[prop.Name].GetType().Name)
+                {
+                    Type modelPropertyType = Type.GetType(prop.PropertyType.FullName);
+                    currentRowValue = Convert.ChangeType(currentRowValue, modelPropertyType);
+                }
+
+                prop.SetValue(model, currentRowValue);
+            }
+            return model;
         }
 
         private T MapSingleRowModel<T>(DataTable table, T model)

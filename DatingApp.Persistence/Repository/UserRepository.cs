@@ -37,6 +37,16 @@ namespace DatingApp.Persistence.Repository
             parameters.Add("@UserName", user.UserName);
             parameters.Add("@PasswordHash", user.PasswordHash);
             parameters.Add("@PasswordSalt", user.PasswordSalt);
+            parameters.Add("@Gender", user.Gender);
+            parameters.Add("@DateOfBirth", user.DateOfBirth);
+            parameters.Add("@KnownAs", user.KnownAs);
+            parameters.Add("@Created", user.Created);
+            parameters.Add("@LastActive", user.LastActive);
+            parameters.Add("@Introduction", user.Introduction);
+            parameters.Add("@LookingFor", user.LookingFor);
+            parameters.Add("@Interests", user.Interests);
+            parameters.Add("@City", user.City);
+            parameters.Add("@Country", user.Country);
 
             dt = sqlHelper.GetDataByDataReader("sp_RegisterUser", CommandType.StoredProcedure, parameters);
             return dt;
