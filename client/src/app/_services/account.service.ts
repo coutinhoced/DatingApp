@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { User } from '../_models/user';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 //This is a Singleton service
 @Injectable({
@@ -10,8 +11,7 @@ import { map } from 'rxjs/operators';
 export class AccountService {
 
   private http = inject(HttpClient);
-
-  baseUrl = 'https://localhost:7032/api/';
+  baseUrl =  environment.apiUrl;
 
   currentUser = signal<User|null>(null);
 

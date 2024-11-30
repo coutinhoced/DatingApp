@@ -183,7 +183,10 @@ namespace DatingApp.Infrastructure.Services
             foreach (var prop in model.GetType().GetProperties(BindingFlags.DeclaredOnly |
                                                                BindingFlags.Public | BindingFlags.Instance))
             {
-                prop.SetValue(model, table.Rows[0][prop.Name]);
+                if (table.Columns.Contains(prop.Name))
+                {
+                    prop.SetValue(model, table.Rows[0][prop.Name]);
+                }
             }
             return model;
         }

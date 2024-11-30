@@ -8,6 +8,7 @@ namespace API.Controllers
 {
 
     [ServiceFilter(typeof(SanitizeParametersFilter))]
+    [Authorize]
     public class UserController : BaseApiController
     {
         private IMediator mediator;
@@ -15,8 +16,7 @@ namespace API.Controllers
         {
             this.mediator = mediator;
         }
-
-        [AllowAnonymous]
+      
         [HttpPost("GetUsers")]
         public async Task<IActionResult> GetUsers([FromBody] GetUsersQuery? usersQuery)
         {    
