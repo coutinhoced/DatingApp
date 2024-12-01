@@ -57,10 +57,14 @@
                 </tab>
                 <tab heading="Photos" #photoTab="tab">
                     @if (photoTab.active) {
-                        <gallery [items]="images" 
+                       <gallery
+                       [scrollBehavior]="'smooth'"
+                       [thumbImageSize]="'cover'"
+                        [items]="images"
+                        thumbPosition="bottom"
                         class="gallery">
-                      </gallery>
-                    }                 
+                       </gallery>
+                    }                  
                 </tab>
                 <tab heading="Messages">
                     <p>Messages will go here</p>

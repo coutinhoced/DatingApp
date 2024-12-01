@@ -7,7 +7,7 @@ import { Gallery, GalleryItem, GalleryModule, ImageItem } from 'ng-gallery';
 
 @Component({
     selector: 'app-member-detail',
-    imports: [TabsModule, GalleryModule],
+    imports: [TabsModule, GalleryModule],    
     templateUrl: './member-detail.component.html',
     styleUrl: './member-detail.component.css'
 })
@@ -29,10 +29,9 @@ export class MemberDetailComponent implements OnInit{
       const username = this.route.snapshot.paramMap.get('username');
       if(!username) return;
       this.memberService.getMember(username).subscribe({
-        next: (member)=> { 
-          debugger;
+        next: (member : any)=> {          
           this.member = member[0];
-          member[0].photos.map(p => {
+          member[0].photos.map((p:any) => {
             this.images.push(new ImageItem({src: p.url, thumb: p.url}));
           })
         }        
