@@ -1,4 +1,5 @@
-﻿using DatingApp.Domain.Entities;
+﻿using DatingApp.Domain.Dto;
+using DatingApp.Domain.Entities;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -15,5 +16,6 @@ namespace DatingApp.Core.Contracts.Repositories
         DataTable RegisterUser(AppUser user);
 
         DataTable GetLoginUser(string username);
+        int UpdateUser(MemberUpdateDto user);
     }
 }

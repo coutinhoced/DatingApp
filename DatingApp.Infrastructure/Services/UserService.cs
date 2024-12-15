@@ -29,13 +29,13 @@ namespace DatingApp.Infrastructure.Services
         }
 
         public List<MemberDto> GetAllUsers(string? name = null)
-        {           
+        {
             List<PhotoDto> photos = new List<PhotoDto>();
             List<MemberDto> memberDtos = new List<MemberDto>();
             try
             {
                 using (DataSet ds = userRepository.GetAllUsers(name))
-                {                   
+                {
                     if (ds.Tables.Count > 0 && ds.Tables[1].Rows.Count > 0)
                     {
                         foreach (DataRow dr in ds.Tables[1].Rows)
@@ -48,8 +48,8 @@ namespace DatingApp.Infrastructure.Services
                     if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                     {
                         foreach (DataRow dr in ds.Tables[0].Rows)
-                        {                                               
-                            MemberDto memberDto = new MemberDto();                            
+                        {
+                            MemberDto memberDto = new MemberDto();
                             int userId = Convert.ToInt32(dr["Id"]);
                             List<PhotoDto> photosToMap = photos.Where(x => x.UserId == userId).ToList();
                             memberDtos.Add(MapToUserDto(dr, photosToMap));
@@ -138,6 +138,25 @@ namespace DatingApp.Infrastructure.Services
             }
             return userDto;
         }
+
+
+        public void UpdateUser(MemberUpdateDto user)
+        {
+            int result = 0;
+            try
+            {
+                result = userRepository.UpdateUser(user);
+                if (result == 0)
+                {
+                    throw new Exception("Changes not saved to Database");
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
 
         private MemberDto MapToUserDto(DataRow dataRow, List<PhotoDto> photos)
         {

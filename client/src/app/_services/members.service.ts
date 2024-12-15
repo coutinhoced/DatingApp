@@ -18,8 +18,12 @@ export class MembersService {
   }
 
   getMembers(){   
-    debugger;
     return this.http.post<Member[]>(this.baseUrl + 'User/GetUsers', {});
+  }
+
+  updateMember(member: Member){
+    debugger;
+    return this.http.put(this.baseUrl + 'User/UpdateUser', member);
   }
 
   

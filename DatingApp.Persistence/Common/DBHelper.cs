@@ -139,5 +139,95 @@ namespace DatingApp.Persistence.Common
             }
         }
 
+
+        public object GetSingleResult(string sql, CommandType cmdtype, Dictionary<string, string> parameters)
+        {
+            object result = null;
+
+            using (SqlConnection con = CreateConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.Connection = con;
+                    cmd.CommandTimeout = CommandTimeOut;
+                    cmd.CommandType = cmdtype;
+                    foreach (var key in parameters.Keys)
+                    {
+                        cmd.Parameters.AddWithValue(key, parameters[key]);
+                    }
+
+                    var dtStart = DateTime.Now;
+                    con.Open();
+                    result = cmd.ExecuteScalar();
+                    con.Close();                
+                }
+
+                return result;
+            }
+        }
+               
+        public int ExecuteDML(string sql, CommandType cmdtype, Dictionary<string, object> parameters)
+        {
+            int rowno = -1;
+
+            using (SqlConnection con = CreateConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.Connection = con;
+                    cmd.CommandTimeout = CommandTimeOut;
+                    cmd.CommandType = cmdtype;
+                    if (parameters != null)
+                    {
+                        foreach (var key in parameters.Keys)
+                        {
+                            cmd.Parameters.Add(new SqlParameter() { ParameterName = key, Value = parameters[key] });
+                        }
+
+                    }
+
+                    var dtStart = DateTime.Now;
+                    con.Open();
+                    rowno = cmd.ExecuteNonQuery();
+                    con.Close();                 
+                }
+
+                return rowno;
+            }
+        }
+
+        public int ExecuteDMLWithSqlParameters(string sql, CommandType cmdtype, List<SqlParameter> parameters)
+        {
+            int rowno = -1;
+
+            using (SqlConnection con = CreateConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.Connection = con;
+                    cmd.CommandTimeout = CommandTimeOut;
+                    cmd.CommandType = cmdtype;
+                    if (parameters != null)
+                    {
+                        foreach (SqlParameter param in parameters)
+                        {
+                            cmd.Parameters.Add(param);
+                        }
+
+                    }
+
+                    var dtStart = DateTime.Now;
+                    con.Open();
+                    rowno = cmd.ExecuteNonQuery();
+                    con.Close();                  
+                }
+
+                return rowno;
+            }
+        }
+
     }
 }

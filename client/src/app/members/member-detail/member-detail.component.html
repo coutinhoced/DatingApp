@@ -57,11 +57,8 @@
                 </tab>
                 <tab heading="Photos" #photoTab="tab">
                     @if (photoTab.active) {
-                       <gallery
-                       [scrollBehavior]="'smooth'"
-                       [thumbImageSize]="'cover'"
-                        [items]="images"
-                        thumbPosition="bottom"
+                       <gallery                      
+                        [items]="images"                        
                         class="gallery">
                        </gallery>
                     }                  

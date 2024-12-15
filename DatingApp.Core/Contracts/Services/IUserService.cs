@@ -14,5 +14,7 @@ namespace DatingApp.Core.Contracts.Services
         UserDto RegisterUser(string username, string password);
 
         UserDto GetLoginUser(string username, string password);
+
+        void UpdateUser(MemberUpdateDto user);
     }
 }

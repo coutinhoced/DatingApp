@@ -1,10 +1,12 @@
 ﻿using DatingApp.Core.Contracts.Common;
 using DatingApp.Core.Contracts.Repositories;
+using DatingApp.Domain.Dto;
 using DatingApp.Domain.Entities;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,6 +53,22 @@ namespace DatingApp.Persistence.Repository
             dt = sqlHelper.GetDataByDataReader("sp_RegisterUser", CommandType.StoredProcedure, parameters);
             return dt;
 
+        }
+
+        public int UpdateUser(MemberUpdateDto user)
+        {
+            int rowsAffectedCount = 0;
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("@Id", user.Id);
+            parameters.Add("@Introduction", user.Introduction);
+            parameters.Add("@LookingFor", user.LookingFor);
+            parameters.Add("@Interests", user.Interests);
+            parameters.Add("@City", user.City);
+            parameters.Add("@Country", user.Country);
+
+            rowsAffectedCount = sqlHelper.ExecuteDML("sp_UpdateUser", CommandType.StoredProcedure, parameters);
+                      
+            return rowsAffectedCount;
         }
 
 
