@@ -32,6 +32,7 @@ export class MemberEditComponent implements OnInit{
   }
 
   loadMember(){
+    debugger;
     const user = this.accountService.currentUser();
     if(!user) return;
 

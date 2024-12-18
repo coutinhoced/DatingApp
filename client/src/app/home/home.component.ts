@@ -23,7 +23,6 @@ export class HomeComponent implements OnInit{
   }  
 
   cancelRegisterMode(event : boolean){
-    debugger;
      this.resisterMode = event;
   }
 
