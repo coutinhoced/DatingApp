@@ -1,6 +1,8 @@
-﻿namespace DatingApp.Domain.Entities
+﻿using DatingApp.Domain.Common;
+
+namespace DatingApp.Domain.Entities
 {
-    public class Photo
+    public class Photo : EntityBase
     {
         public int Id { get; set; } 
 

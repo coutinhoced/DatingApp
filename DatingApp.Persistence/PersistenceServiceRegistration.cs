@@ -21,6 +21,7 @@ namespace DatingApp.Persistence
      
             services.AddTransient<IDBHelper, DBHelper>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IPhotoRepository, PhotoRepository>();
 
             return services;
         

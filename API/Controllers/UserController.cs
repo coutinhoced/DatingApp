@@ -1,6 +1,7 @@
 ﻿using API.Filters;
 using DatingApp.Application.Features.User.Commands;
 using DatingApp.Application.Features.User.Queries;
+using DatingApp.Domain.Dto;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,6 +39,21 @@ namespace API.Controllers
             //var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             await mediator.Send(user);
             return NoContent();
+        }
+
+        [HttpPost("Add-photo")]
+        public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file, int UserId)
+        {
+            AddPhotoCommand command = new AddPhotoCommand();
+            command.file = file;
+            command.UserId = UserId;
+            PhotoDto response =  await mediator.Send(command);
+
+            if (!string.IsNullOrEmpty(response.ValidationError))
+            {
+                return BadRequest(response.ValidationError);
+            }
+            return Ok(response);
         }
     }
 }

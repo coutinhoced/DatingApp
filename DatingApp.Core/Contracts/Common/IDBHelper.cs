@@ -24,6 +24,22 @@ namespace DatingApp.Core.Contracts.Common
 
         object GetSingleResult(string sql, CommandType cmdtype, Dictionary<string, string> sqlparams);
 
+        /// <summary>
+        /// Performs ExecuteScalar and returns first row of the first column and rest are ignored
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="cmdtype"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        object ExecuteDMLScalar(string sql, CommandType cmdtype, Dictionary<string, object> parameters);
 
+        /// <summary>
+        ///  Performs ExecuteScalar and returns first row of the first column and rest are ignored
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="cmdtype"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        object ExecuteDMLScalar(string sql, CommandType cmdtype, List<SqlParameter> parameters);
     }
 }

@@ -190,7 +190,7 @@ namespace DatingApp.Persistence.Common
 
                     var dtStart = DateTime.Now;
                     con.Open();
-                    rowno = cmd.ExecuteNonQuery();
+                    rowno = cmd.ExecuteNonQuery();                 
                     con.Close();                 
                 }
 
@@ -226,6 +226,70 @@ namespace DatingApp.Persistence.Common
                 }
 
                 return rowno;
+            }
+        }
+
+
+        public object ExecuteDMLScalar(string sql, CommandType cmdtype, Dictionary<string, object> parameters)
+        {
+            object retValue = null;
+
+            using (SqlConnection con = CreateConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.Connection = con;
+                    cmd.CommandTimeout = CommandTimeOut;
+                    cmd.CommandType = cmdtype;
+                    if (parameters != null)
+                    {
+                        foreach (var key in parameters.Keys)
+                        {
+                            cmd.Parameters.AddWithValue(key, parameters[key]);
+                        }
+
+                    }
+
+                    var dtStart = DateTime.Now;
+                    con.Open();
+                    retValue = cmd.ExecuteScalar();
+                    con.Close();
+                  
+                }
+
+                return retValue;
+            }
+        }
+
+        public object ExecuteDMLScalar(string sql, CommandType cmdtype, List<SqlParameter> parameters)
+        {
+            object retValue = null;
+
+            using (SqlConnection con = CreateConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.Connection = con;
+                    cmd.CommandTimeout = CommandTimeOut;
+                    cmd.CommandType = cmdtype;
+                    if (parameters != null)
+                    {
+                        foreach (SqlParameter param in parameters)
+                        {
+                            cmd.Parameters.Add(param);
+                        }
+
+                    }
+
+                    var dtStart = DateTime.Now;
+                    con.Open();
+                    retValue = cmd.ExecuteScalar();
+                    con.Close();                    
+                }
+
+                return retValue;
             }
         }
 

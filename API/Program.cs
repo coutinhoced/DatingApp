@@ -13,6 +13,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<DBOptions>(builder.Configuration.GetSection("ConnectionStrings"));
 builder.Services.Configure<TokenOptions>(builder.Configuration.GetSection("Token"));
+builder.Services.Configure<CloudinaryOptions>(builder.Configuration.GetSection("CloudinarySettings"));
 builder.ConfigureDatingServices();
 builder.Services.AddCors();
 
