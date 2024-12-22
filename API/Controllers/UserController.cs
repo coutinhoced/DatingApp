@@ -35,14 +35,13 @@ namespace API.Controllers
 
         [HttpPut("UpdateUser")]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserCommand user)
-        {
-            //var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        {            
             await mediator.Send(user);
             return NoContent();
         }
 
         [HttpPost("Add-photo")]
-        public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file, int UserId)
+        public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file, [FromForm] int UserId)
         {
             AddPhotoCommand command = new AddPhotoCommand();
             command.file = file;
@@ -53,7 +52,8 @@ namespace API.Controllers
             {
                 return BadRequest(response.ValidationError);
             }
-            return Ok(response);
+            var currentUser = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return CreatedAtAction(nameof(GetUsers), new GetUsersQuery { name = currentUser }, response);
         }
     }
 }
