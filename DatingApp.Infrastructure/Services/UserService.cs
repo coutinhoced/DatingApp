@@ -128,6 +128,7 @@ namespace DatingApp.Infrastructure.Services
                 }
 
                 userDto.Username = username;
+                userDto.PhotoUrl = appUser.PhotoUrl;
                 userDto.Token = tokenService.CreateToken(appUser);
 
             }

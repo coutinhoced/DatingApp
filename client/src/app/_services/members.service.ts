@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Member } from '../_models/member';
-import { Observable, observable, of } from 'rxjs';
+import { Observable, observable, of, tap } from 'rxjs';
+import { Photo } from '../_models/photo';
 
 @Injectable({
   providedIn: 'root'
@@ -34,9 +35,19 @@ export class MembersService {
   }
 
   updateMember(member: Member){
-    return this.http.put(this.baseUrl + 'User/UpdateUser', member);
-    
+    return this.http.put(this.baseUrl + 'User/UpdateUser', member);    
   }
 
-  
+  setMainPhoto(photo : Photo){
+    return this.http.put(this.baseUrl + 'User/set-main-photo/' + photo.id, {}).pipe(
+      tap(()=>{
+         this.memebers.update(members => members.map(m => {
+             if(m.photos.includes(photo)){
+              m.photoUrl = photo.url;
+             }
+             return m;
+            }))
+      }));   
+  }
+    
 }
