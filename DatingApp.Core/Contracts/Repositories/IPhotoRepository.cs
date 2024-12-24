@@ -9,7 +9,7 @@ namespace DatingApp.Core.Contracts.Repositories
 {
     public interface IPhotoRepository
     {
-        T AddUserPhoto<T>(int UserId, string Url, string PublicId);    
-
+        T AddUserPhoto<T>(int UserId, string Url, string PublicId);
+        int UpdateMainPhoto(int photoId);
     }
 }

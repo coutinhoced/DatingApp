@@ -15,5 +15,7 @@ namespace DatingApp.Core.Contracts.Services
         Task<PhotoDto> AddPhotoAsync(IFormFile file, int UserId);
 
         Task<DeletionResult> DeletePhotoAsync(string publicId);
+
+        void UpdateMainPhoto(int photoId);
     }
 }

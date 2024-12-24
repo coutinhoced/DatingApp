@@ -67,5 +67,14 @@ namespace DatingApp.Infrastructure.Services
             var deleteParams = new DeletionParams(publicId);
             return await _cloudinary.DestroyAsync(deleteParams);
         }
+
+        public void UpdateMainPhoto(int photoId)
+        {
+            int rowsAffected = this._photoRepository.UpdateMainPhoto(photoId);
+            if (rowsAffected == 0)
+            {
+                throw new Exception("Problem while setting main photo");
+            }
+        }
     }
 }

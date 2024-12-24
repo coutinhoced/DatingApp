@@ -55,5 +55,15 @@ namespace API.Controllers
             var currentUser = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return CreatedAtAction(nameof(GetUsers), new GetUsersQuery { name = currentUser }, response);
         }
+
+
+        [HttpPut("set-main-photo/{photoId:int}")]
+        public async Task<ActionResult> SetMainPhoto(int photoId)
+        {
+            SetMainPhotoCommand command = new SetMainPhotoCommand();
+            command.photoId = photoId;
+            await mediator.Send(command);
+            return NoContent();
+        }
     }
 }

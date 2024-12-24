@@ -1,5 +1,6 @@
 ﻿using DatingApp.Core.Contracts.Common;
 using DatingApp.Core.Contracts.Repositories;
+using DatingApp.Domain.Dto;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -27,6 +28,17 @@ namespace DatingApp.Persistence.Repository
             returnValue =(T)sqlHelper.ExecuteDMLScalar("sp_AddUserPhoto", CommandType.StoredProcedure, parameters);
 
             return returnValue;
+        }
+
+        public int UpdateMainPhoto(int photoId)
+        {
+            int rowsAffectedCount = 0;
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("@Id", photoId);
+
+            rowsAffectedCount = sqlHelper.ExecuteDML("sp_UpdateMainPhoto", CommandType.StoredProcedure, parameters);
+
+            return rowsAffectedCount;
         }
     }
 }
