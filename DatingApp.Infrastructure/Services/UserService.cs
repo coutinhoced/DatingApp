@@ -30,7 +30,7 @@ namespace DatingApp.Infrastructure.Services
 
         public List<MemberDto> GetAllUsers(string? name = null)
         {
-            List<PhotoDto> photos = new List<PhotoDto>();
+            List<Photo> photos = new List<Photo>();
             List<MemberDto> memberDtos = new List<MemberDto>();
             try
             {
@@ -40,8 +40,8 @@ namespace DatingApp.Infrastructure.Services
                     {
                         foreach (DataRow dr in ds.Tables[1].Rows)
                         {
-                            PhotoDto photo = new PhotoDto();
-                            photos.Add(MapSingleRowModel<PhotoDto>(dr, photo));
+                            Photo photo = new Photo();
+                            photos.Add(MapSingleRowModel<Photo>(dr, photo));
                         }
                     }
 
@@ -51,7 +51,7 @@ namespace DatingApp.Infrastructure.Services
                         {
                             MemberDto memberDto = new MemberDto();
                             int userId = Convert.ToInt32(dr["Id"]);
-                            List<PhotoDto> photosToMap = photos.Where(x => x.UserId == userId).ToList();
+                            List<Photo> photosToMap = photos.Where(x => x.UserId == userId).ToList();
                             memberDtos.Add(MapToUserDto(dr, photosToMap));
                         }
                     }
@@ -159,7 +159,7 @@ namespace DatingApp.Infrastructure.Services
         }
 
 
-        private MemberDto MapToUserDto(DataRow dataRow, List<PhotoDto> photos)
+        private MemberDto MapToUserDto(DataRow dataRow, List<Photo> photos)
         {
             var photoUrl = photos.Where(p => p.IsMain == true).Select(x => x.Url).FirstOrDefault();
 

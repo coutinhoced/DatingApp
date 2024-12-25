@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DatingApp.Domain.Entities;
 
 namespace DatingApp.Domain.Dto
 {
@@ -32,6 +33,6 @@ namespace DatingApp.Domain.Dto
 
         public string PhotoUrl { get; set; }
 
-        public List<PhotoDto> Photos { get; set; }
+        public List<Photo> Photos { get; set; }
     }
 }

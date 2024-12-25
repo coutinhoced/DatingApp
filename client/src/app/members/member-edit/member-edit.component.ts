@@ -33,12 +33,12 @@ export class MemberEditComponent implements OnInit{
   }
 
   loadMember(){
-    debugger;
     const user = this.accountService.currentUser();
     if(!user) return;
 
     this.memberService.getMember(user.username).subscribe({
       next: (member) =>{
+        debugger;
         this.member = member[0];
       }
     })
@@ -58,6 +58,6 @@ export class MemberEditComponent implements OnInit{
     this.member = event;
    }
 
-   
+
 
 }

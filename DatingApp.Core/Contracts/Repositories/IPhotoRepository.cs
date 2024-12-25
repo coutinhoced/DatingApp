@@ -11,5 +11,7 @@ namespace DatingApp.Core.Contracts.Repositories
     {
         T AddUserPhoto<T>(int UserId, string Url, string PublicId);
         int UpdateMainPhoto(int photoId);
+
+        int DeletePhoto(int photoId);
     }
 }

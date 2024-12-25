@@ -3,4 +3,5 @@ export interface Photo {
     url: string
     isMain: boolean
     userId: number
+    publicId :string
   }

@@ -28,9 +28,9 @@ namespace DatingApp.Infrastructure.Services
             this._photoRepository = photoRepository;
         }
 
-        public async Task<PhotoDto> AddPhotoAsync(IFormFile file, int UserId)
+        public async Task<Photo> AddPhotoAsync(IFormFile file, int UserId)
         {
-            PhotoDto photoDto = new PhotoDto();
+            Photo photo = new Photo();
             var uploadResult = new ImageUploadResult();
             if (file.Length > 0)
             {
@@ -48,21 +48,39 @@ namespace DatingApp.Infrastructure.Services
 
             if (uploadResult.Error != null)
             {
-                photoDto.ValidationError = uploadResult.Error.Message;
-                return photoDto;
+                photo.ValidationError = uploadResult.Error.Message;
+                return photo;
             }
 
             int Id = _photoRepository.AddUserPhoto<int>(UserId, uploadResult.SecureUrl.AbsoluteUri, uploadResult.PublicId);
 
-            photoDto.Id = Id;
-            photoDto.Url = uploadResult.SecureUrl.AbsoluteUri;
-            photoDto.IsMain = false;
-            photoDto.UserId = UserId;
+            photo.Id = Id;
+            photo.Url = uploadResult.SecureUrl.AbsoluteUri;
+            photo.IsMain = false;
+            photo.UserId = UserId;
+            photo.PublicId = uploadResult.PublicId;
 
-            return photoDto;
+            return photo;
         }
 
-        public async Task<DeletionResult> DeletePhotoAsync(string publicId)
+        public async Task DeletePhotoAsync(Photo photo)
+        {
+            var result = await DeletePhotoAsyncFromCloudinary(photo.PublicId);
+            if (result.Error != null)
+            {
+                throw new Exception("Problem while deleting photo");
+            }
+            else
+            {
+                int rowsAffected = _photoRepository.DeletePhoto(photo.Id);
+                if (rowsAffected == 0)
+                {
+                    throw new Exception("Problem while deleting photo");
+                }
+            }
+        }
+
+        private async Task<DeletionResult> DeletePhotoAsyncFromCloudinary(string publicId)
         {
             var deleteParams = new DeletionParams(publicId);
             return await _cloudinary.DestroyAsync(deleteParams);

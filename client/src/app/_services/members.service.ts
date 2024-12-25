@@ -24,18 +24,18 @@ export class MembersService {
         observer.complete();
       });
     }
-    return this.http.post<Member[]>(this.baseUrl + 'User/GetUsers', input);
+    return this.http.post<Member[]>(this.baseUrl + 'User/get-users', input);
   }
 
   getMembers(){       
-    return this.http.post<Member[]>(this.baseUrl + 'User/GetUsers', {}).subscribe({
+    return this.http.post<Member[]>(this.baseUrl + 'User/get-users', {}).subscribe({
          next: memebers => this.memebers.set(memebers)
     });
 
   }
 
   updateMember(member: Member){
-    return this.http.put(this.baseUrl + 'User/UpdateUser', member);    
+    return this.http.put(this.baseUrl + 'User/update-user', member);    
   }
 
   setMainPhoto(photo : Photo){
@@ -48,6 +48,20 @@ export class MembersService {
              return m;
             }))
       }));   
+  }
+
+  deletePhoto(photo : Photo){
+    debugger;
+     return this.http.delete(this.baseUrl + 'User/delete-photo', { body: photo}).pipe(
+      tap(()=>{
+        this.memebers.update(members => members.map(m => {
+          if(m.photos.includes(photo)){
+             m.photos = m.photos.filter(x => x.id !== photo.id)
+          }
+          return m;
+        }))
+      })
+     )
   }
     
 }

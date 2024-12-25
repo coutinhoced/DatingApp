@@ -1,7 +1,7 @@
 ﻿using API.Filters;
 using DatingApp.Application.Features.User.Commands;
 using DatingApp.Application.Features.User.Queries;
-using DatingApp.Domain.Dto;
+using DatingApp.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +20,7 @@ namespace API.Controllers
             this.mediator = mediator;
         }
 
-        [HttpPost("GetUsers")]
+        [HttpPost("get-users")]
         public async Task<IActionResult> GetUsers([FromBody] GetUsersQuery? usersQuery)
         {
             if (usersQuery == null)
@@ -33,20 +33,20 @@ namespace API.Controllers
         }
 
 
-        [HttpPut("UpdateUser")]
+        [HttpPut("update-user")]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserCommand user)
         {            
             await mediator.Send(user);
             return NoContent();
         }
 
-        [HttpPost("Add-photo")]
-        public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file, [FromForm] int UserId)
+        [HttpPost("add-photo")]
+        public async Task<ActionResult<Photo>> AddPhoto(IFormFile file, [FromForm] int UserId)
         {
             AddPhotoCommand command = new AddPhotoCommand();
             command.file = file;
             command.UserId = UserId;
-            PhotoDto response =  await mediator.Send(command);
+            Photo response =  await mediator.Send(command);
 
             if (!string.IsNullOrEmpty(response.ValidationError))
             {
@@ -64,6 +64,13 @@ namespace API.Controllers
             command.photoId = photoId;
             await mediator.Send(command);
             return NoContent();
+        }
+
+        [HttpDelete("delete-photo")]
+        public async Task<ActionResult> DeletePhoto([FromBody] DeletePhotoCommand user)
+        {
+           var result = await mediator.Send(user);
+           return NoContent();
         }
     }
 }

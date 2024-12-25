@@ -40,5 +40,17 @@ namespace DatingApp.Persistence.Repository
 
             return rowsAffectedCount;
         }
+
+
+        public int DeletePhoto(int photoId)
+        {
+            int rowsAffectedCount = 0;
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("@Id", photoId);
+
+            rowsAffectedCount = sqlHelper.ExecuteDML("sp_DeletePhoto", CommandType.StoredProcedure, parameters);
+
+            return rowsAffectedCount;
+        }
     }
 }

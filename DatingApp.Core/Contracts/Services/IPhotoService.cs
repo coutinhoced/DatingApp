@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet.Actions;
 using DatingApp.Domain.Dto;
+using DatingApp.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,9 @@ namespace DatingApp.Core.Contracts.Services
     public interface IPhotoService
     {
 
-        Task<PhotoDto> AddPhotoAsync(IFormFile file, int UserId);
+        Task<Photo> AddPhotoAsync(IFormFile file, int UserId);
 
-        Task<DeletionResult> DeletePhotoAsync(string publicId);
+        Task DeletePhotoAsync(Photo photo);
 
         void UpdateMainPhoto(int photoId);
     }
