@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RegisterComponent } from "../register/register.component";
+import { AccountService } from '../_services/account.service';
 
 
 @Component({
@@ -10,9 +11,11 @@ import { RegisterComponent } from "../register/register.component";
 })
 export class HomeComponent implements OnInit{
 
+  accountService = inject(AccountService);
+
   ngOnInit(): void { 
     
-   }
+  }
 
   resisterMode : boolean = false;
   users: any;
