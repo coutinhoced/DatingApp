@@ -17,7 +17,7 @@ using DatingApp.Infrastructure.Extensions;
 
 namespace DatingApp.Infrastructure.Services
 {
-    public class UserService : IUserService
+    public class UserService : BaseService, IUserService
     {
         private IUserRepository userRepository;
         private ITokenService tokenService;
@@ -64,30 +64,27 @@ namespace DatingApp.Infrastructure.Services
             return memberDtos;
         }
 
-        public UserDto RegisterUser(string username, string password)
+        public UserDto RegisterUser(AppUser appUser, string password)
         {
-            AppUser appUser = new AppUser();
             UserDto userDto = new UserDto();
             try
             {
-                var userExists = GetAllUsers(username);
+                var userExists = GetAllUsers(appUser.UserName);
                 if (userExists.Count > 0)
                 {
                     throw new DuplicateNameException("username already exists");
                 }
 
                 using var hmac = new HMACSHA512();
-                var user = new AppUser
-                {
-                    UserName = username,
-                    PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password)),
-                    PasswordSalt = hmac.Key
-                };
 
-                DataTable registeredUserTable = userRepository.RegisterUser(user);
+                appUser.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                appUser.PasswordSalt = hmac.Key;
 
-                userDto.Username = username;
-                userDto.Token = tokenService.CreateToken(user);
+                DataTable registeredUserTable = userRepository.RegisterUser(appUser);
+
+                userDto.Username = appUser.UserName;
+                userDto.KnownAs = appUser.KnownAs;
+                userDto.Token = tokenService.CreateToken(appUser);
             }
             catch (Exception ex)
             {
@@ -181,35 +178,35 @@ namespace DatingApp.Infrastructure.Services
             return memberDto;
         }
 
-        private T MapSingleRowModel<T>(DataRow dataRow, T model)
-        {
-            foreach (var prop in model.GetType().GetProperties(BindingFlags.DeclaredOnly |
-                                                              BindingFlags.Public | BindingFlags.Instance))
-            {
-                object currentRowValue = dataRow[prop.Name];
-                if (prop.PropertyType.Name != dataRow[prop.Name].GetType().Name)
-                {
-                    Type modelPropertyType = Type.GetType(prop.PropertyType.FullName);
-                    currentRowValue = Convert.ChangeType(currentRowValue, modelPropertyType);
-                }
+        //private T MapSingleRowModel<T>(DataRow dataRow, T model)
+        //{
+        //    foreach (var prop in model.GetType().GetProperties(BindingFlags.DeclaredOnly |
+        //                                                      BindingFlags.Public | BindingFlags.Instance))
+        //    {
+        //        object currentRowValue = dataRow[prop.Name];
+        //        if (prop.PropertyType.Name != dataRow[prop.Name].GetType().Name)
+        //        {
+        //            Type modelPropertyType = Type.GetType(prop.PropertyType.FullName);
+        //            currentRowValue = Convert.ChangeType(currentRowValue, modelPropertyType);
+        //        }
 
-                prop.SetValue(model, currentRowValue);
-            }
-            return model;
-        }
+        //        prop.SetValue(model, currentRowValue);
+        //    }
+        //    return model;
+        //}
 
-        private T MapSingleRowModel<T>(DataTable table, T model)
-        {
-            foreach (var prop in model.GetType().GetProperties(BindingFlags.DeclaredOnly |
-                                                               BindingFlags.Public | BindingFlags.Instance))
-            {
-                if (table.Columns.Contains(prop.Name))
-                {
-                    prop.SetValue(model, table.Rows[0][prop.Name]);
-                }
-            }
-            return model;
-        }
+        //private T MapSingleRowModel<T>(DataTable table, T model)
+        //{
+        //    foreach (var prop in model.GetType().GetProperties(BindingFlags.DeclaredOnly |
+        //                                                       BindingFlags.Public | BindingFlags.Instance))
+        //    {
+        //        if (table.Columns.Contains(prop.Name))
+        //        {
+        //            prop.SetValue(model, table.Rows[0][prop.Name]);
+        //        }
+        //    }
+        //    return model;
+        //}
 
     }
 }

@@ -17,17 +17,17 @@ namespace DatingApp.Persistence.Repository
         {
             this.sqlHelper = sqlHelper;
         }
-        public T AddUserPhoto<T>(int UserId, string Url, string PublicId)
+        public DataTable AddUserPhoto(int UserId, string Url, string PublicId)
         {
-            T returnValue;
+            DataTable dt = new DataTable();
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("@UserId", UserId);
             parameters.Add("@Url", Url);
             parameters.Add("@PublicId", PublicId);
 
-            returnValue =(T)sqlHelper.ExecuteDMLScalar("sp_AddUserPhoto", CommandType.StoredProcedure, parameters);
-
-            return returnValue;
+            dt = sqlHelper.GetDataByDataReader("sp_AddUserPhoto", CommandType.StoredProcedure, parameters);
+                      
+            return dt;
         }
 
         public int UpdateMainPhoto(int photoId)

@@ -9,13 +9,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DatingApp.Infrastructure.Services
 {
-    public class PhotoService : IPhotoService
+    public class PhotoService : BaseService,IPhotoService
     {
         private readonly Cloudinary _cloudinary;
         private IPhotoRepository _photoRepository;
@@ -52,13 +53,15 @@ namespace DatingApp.Infrastructure.Services
                 return photo;
             }
 
-            int Id = _photoRepository.AddUserPhoto<int>(UserId, uploadResult.SecureUrl.AbsoluteUri, uploadResult.PublicId);
+            DataTable InsertedPhotoTable = _photoRepository.AddUserPhoto(UserId, uploadResult.SecureUrl.AbsoluteUri, uploadResult.PublicId);
 
-            photo.Id = Id;
-            photo.Url = uploadResult.SecureUrl.AbsoluteUri;
-            photo.IsMain = false;
-            photo.UserId = UserId;
-            photo.PublicId = uploadResult.PublicId;
+            photo = MapSingleRowModel<Photo>(InsertedPhotoTable, photo);
+
+            //photo.Id = Id;
+            //photo.Url = uploadResult.SecureUrl.AbsoluteUri;
+            //photo.IsMain = false;
+            //photo.UserId = UserId;
+            //photo.PublicId = uploadResult.PublicId;
 
             return photo;
         }

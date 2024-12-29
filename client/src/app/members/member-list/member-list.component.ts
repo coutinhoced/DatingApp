@@ -13,6 +13,7 @@ export class MemberListComponent implements OnInit {
   memberService = inject(MembersService);
 
   ngOnInit(): void {
+    debugger;
     if(this.memberService.memebers().length === 0){
     this.loadMembers();
    }
